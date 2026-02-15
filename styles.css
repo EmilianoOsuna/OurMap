@@ -1,33 +1,106 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+#globeViz {
+    width: 100vw;
+    height: 100vh;
+}
 
-        body { margin: 0; background-color: #0a0a0a; font-family: 'Montserrat', sans-serif; overflow: hidden; }
-        
-        #map { height: 100vh; width: 100vw; background: #0a0a0a; }
+/* Estilos para la galería modal */
+#galleryModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(20, 20, 20, 0.95);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 75, 75, 0.5);
+    text-align: center;
+    z-index: 1000;
+    border: 1px solid rgba(255, 75, 75, 0.3);
+}
 
-        /* Título limpio sin iconos para no confundir */
-        .titulo {
-            position: absolute; top: 20px; width: 100%; text-align: center; z-index: 1000;
-            pointer-events: none; /* Permite hacer click en el mapa a través del título */
-        }
-        .titulo h1 { 
-            color: #ff4081; margin: 0; text-shadow: 0 0 10px rgba(0,0,0,0.8); 
-            font-size: 2.5rem; letter-spacing: 2px;
-        }
-        .titulo p { color: white; margin: 5px 0 0 0; font-size: 1.2rem; }
+/* Personalizar la barra de scroll del modal */
+#galleryModal::-webkit-scrollbar {
+    width: 8px;
+}
+#galleryModal::-webkit-scrollbar-thumb {
+    background-color: #ff4b4b;
+    border-radius: 4px;
+}
 
-        /* Estilo para los nombres de los países (Tooltips) */
-        .pais-label {
-            background: transparent; border: none; box-shadow: none;
-            color: rgba(255, 255, 255, 0.7); font-weight: bold; font-size: 12px;
-        }
+#galleryModal h2 {
+    margin-top: 0;
+    color: #ff4b4b;
+    font-size: 1.8em;
+}
 
-        /* Modal / Galería */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); overflow-y: auto; }
-        .modal-content { margin: 5% auto; padding: 20px; width: 90%; max-width: 600px; text-align: center; background: #1a1a1a; border-radius: 15px; border: 1px solid #ff4081; position: relative; }
-        .modal-content h2 { color: #ff4081; margin-top: 0; }
-        .modal-content img { width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #333; }
-        .close { color: white; position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; }
-        
-        /* Animación del Pin */
-        .custom-pin { filter: drop-shadow(0 0 10px #ff0040); animation: latido 1.5s infinite; }
-        @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+#galleryModal p {
+    color: #ddd;
+    margin-bottom: 25px;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Estilos para las fotos reales */
+.photo-grid img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.photo-grid img:hover {
+    transform: scale(1.05);
+}
+
+.photo-placeholder {
+    background-color: #333;
+    height: 150px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+    color: #aaa;
+    border: 2px dashed #555;
+}
+
+.close-btn {
+    margin-top: 30px;
+    padding: 12px 25px;
+    background-color: #ff4b4b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
+}
+
+.close-btn:hover {
+    background-color: #ff2a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 75, 75, 0.6);
+}

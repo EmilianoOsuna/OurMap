@@ -1,71 +1,53 @@
-// ==========================================
-//  Paso 1: PEGA TUS COORDENADAS AQUÍ ABAJO
-// ==========================================
-// Busca en Google Maps, click derecho, copia los números.
-// Ejemplo La Paz: [-16.4897, -68.1193]
+// Declaramos el mundo globalmente para poder acceder a él desde la función de cerrar
+let world;
 
-const COORDENADAS_BOLIVIA = [-16.2902, -63.5887]; 
+const BOLIVIA_LAT = -16.2902;
+const BOLIVIA_LNG = -63.5887;
+const HIGHLIGHT_COLOR = '#659FD2'; 
+const STROKE_COLOR = '#222222'
 
-// ==========================================
+fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
+    .then(res => res.json())
+    .then(countries => {
+        
+        world = Globe()
+            (document.getElementById('globeViz'))
+            .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+            .showGlobe(true)
+            .showAtmosphere(true)
+            .atmosphereColor(HIGHLIGHT_COLOR)
+            .atmosphereAltitude(0.15)
+            .polygonsData(countries.features)
+            .polygonAltitude(d => d.properties.NAME === 'Bolivia' ? 0.01 : 0.01)
+            .polygonCapColor(d => d.properties.NAME === 'Bolivia' ? HIGHLIGHT_COLOR : '#0a0a0a') 
+            .polygonSideColor(() => '#000000')
+            .polygonStrokeColor(() => STROKE_COLOR) 
+            .onPolygonClick((d, event, { lat, lng, altitude }) => {
+                if (d.properties.NAME === 'Bolivia') {
+                    // Detener rotación al interactuar
+                    world.controls().autoRotate = false;
+                    
+                    world.pointOfView({ lat: BOLIVIA_LAT, lng: BOLIVIA_LNG, altitude: 1.8 }, 1200);
+                    
+                    setTimeout(() => {
+                        document.getElementById('galleryModal').style.display = 'block';
+                    }, 1000);
+                }
+            })
+            .onPolygonHover(hoverD => {
+                world.polygonAltitude(d => d === hoverD && d.properties.NAME === 'Bolivia' ? 0.03 : (d.properties.NAME === 'Bolivia' ? 0.01 : 0.01));
+                document.body.style.cursor = (hoverD && hoverD.properties.NAME === 'Bolivia') ? 'pointer' : 'default';
+            });
 
-// 1. Configuración del mapa (Límites para que no se repita)
-const bounds = [[-85, -180], [85, 180]];
-var map = L.map('map', {
-    center: [-16.2902, -63.5887], // Centrado en Sudamérica para ver bien Bolivia
-    zoom: 3.5,
-    minZoom: 3,
-    maxBounds: bounds,
-    maxBoundsViscosity: 1.0,
-    zoomControl: false
-});
+        world.controls().autoRotate = true;
+        world.controls().autoRotateSpeed = 0.6; 
+    });
 
-// 2. Capa base (CON ETIQUETAS/NOMBRES)
-// Usamos 'dark_all' que incluye nombres de países y ciudades
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '©CARTO',
-    subdomains: 'abcd',
-    maxZoom: 19,
-    noWrap: true
-}).addTo(map);
-
-// 3. Pintar Bolivia de Rojo
-function estiloPaises(feature) {
-    if (feature.id === 'BOL') {
-        return { fillColor: '#ff0055', weight: 2, color: '#ff4081', fillOpacity: 0.6 };
-    } else {
-        return { fillColor: '#050505', weight: 1, color: '#222', fillOpacity: 0.8 };
+function closeGallery() {
+    document.getElementById('galleryModal').style.display = 'none';
+    
+    // Volver a activar la rotación al cerrar la galería
+    if (world) {
+        world.controls().autoRotate = true; 
     }
-}
-
-// Cargar siluetas
-fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
-.then(res => res.json())
-.then(data => {
-    L.geoJSON(data, {
-        style: estiloPaises,
-        onEachFeature: function(feature, layer) {
-            // Acción solo para Bolivia
-            if (feature.id === 'BOL') {
-                layer.on('click', abrirModal);
-                layer.on('mouseover', function() { this.setStyle({fillOpacity: 0.8, cursor: 'pointer'}); });
-                layer.on('mouseout', function() { this.setStyle({fillOpacity: 0.6}); });
-            }
-        }
-    }).addTo(map);
-});
-
-// 4. EL ÚNICO PIN (Corazón)
-var iconoCorazon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/210/210545.png',
-    iconSize: [45, 45], // Tamaño
-    iconAnchor: [22, 45], // El punto del pin está abajo al centro
-    className: 'custom-pin'
-});
-
-var marcador = L.marker(COORDENADAS_BOLIVIA, {icon: iconoCorazon}).addTo(map);
-marcador.on('click', abrirModal);
-
-// Función auxiliar para abrir el modal
-function abrirModal() {
-    document.getElementById('modalBolivia').style.display = 'block';
 }
