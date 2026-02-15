@@ -11,7 +11,7 @@
 <body>
 
     <div id="anniversaryCard">
-        <h1>Felices 16 meses, mi amorcito</h1>
+        <h1>Nuestro mundo, mi amorcito</h1>
         <div id="counter">
             <div class="time-box">
                 <span class="num" id="meses">0</span>
@@ -39,21 +39,25 @@
     <div id="globeViz"></div>
 
     <div id="galleryModal">
-        <h2>Nuestro mundo</h2>
-        <p>Vamos a ir desbloqueando lugares conforme estemos juntos ahí</p>
+        <h2>Recuerdos</h2>
+        <p>Vamos a construir más y más. Hasta que Dios nos de vida</p>
         
         <div class="carousel-container">
             <button class="nav-btn left" onclick="prevImage()">&#10094;</button>
             
             <div class="image-wrapper">
                 <img id="carouselImage" src="" alt="Nuestro recuerdo">
-                <div id="placeholderText" class="placeholder-text">Añade tus fotos en script.js</div>
+                
+                <div id="letterContainer" style="display: none;">
+                    <div class="letter-content">
+                        </div>
+                </div>
+                
+                <div id="placeholderText" class="placeholder-text">Cargando recuerdos...</div>
             </div>
 
             <button class="nav-btn right" onclick="nextImage()">&#10095;</button>
         </div>
-
-        <button class="close-btn" onclick="closeGallery()">Cerrar Galería</button>
     </div>
 
     <script src="script.js"></script>

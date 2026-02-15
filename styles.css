@@ -92,9 +92,7 @@ body {
     transform: translate(-50%, -40%) scale(0.95);
     width: 90%;
     max-width: 800px;
-    max-height: 80vh;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    max-height: 85vh;
     overflow-y: auto;
     background: rgba(15, 15, 15, 0.95);
     color: white;
@@ -107,6 +105,9 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Ocultar barra de scroll en Firefox y Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 #galleryModal.show {
@@ -115,13 +116,13 @@ body {
     transform: translate(-50%, -50%) scale(1);
 }
 
-#galleryModal::-webkit-scrollbar {
-    display: none; /* Oculta la barra visualmente en Chrome/Safari */
-}
-#galleryModal::-webkit-scrollbar-thumb { background-color: #C3D9E3; border-radius: 4px; }
+/* Ocultar barra de scroll en Chrome/Safari */
+#galleryModal::-webkit-scrollbar { display: none; }
+
 #galleryModal h2 { margin-top: 0; color: #C3D9E3; font-size: 1.8em; }
 #galleryModal p { color: #cccccc; margin-bottom: 25px; }
 
+/* --- Carrusel y Carta --- */
 /* --- Carrusel y Carta --- */
 .carousel-container {
     display: flex;
@@ -129,36 +130,55 @@ body {
     justify-content: center;
     position: relative;
     width: 100%;
-    height: 450px;
-    margin-bottom: 20px;
+    /* Quitamos la altura fija para que se adapte al contenido */
+    min-height: 300px; 
 }
 
 .image-wrapper {
-    width: 90%;
-    height: 100%;
+    /* Usamos max-width en lugar de width fijo para que pueda encogerse en fotos verticales */
+    max-width: 85%; 
+    height: auto; /* Quitamos el height: 100% */
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    background-color: #222;
+    background-color: transparent;
     border: 2px solid rgba(195, 217, 227, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Añadimos una transición para que cuando el cuadro cambie de tamaño, lo haga suavemente */
+    transition: width 0.3s ease, height 0.3s ease; 
 }
 
-#carouselImage { width: 100%; height: 100%; object-fit: contain; display: none; }
+#carouselImage { 
+    /* La imagen dicta su propio tamaño sin salirse de los límites */
+    width: auto; 
+    height: auto; 
+    max-width: 100%; 
+    max-height: 65vh; /* Evita que las fotos muy altas se salgan de la pantalla */
+    display: none; 
+    /* Mantenemos la transición de opacidad */
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
+}
+
 .placeholder-text { color: #C3D9E3; font-size: 0.9em; opacity: 0.7; }
 
 #letterContainer {
     width: 100%;
-    height: 100%;
+    min-width: 280px; /* Para que la carta no se comprima demasiado */
+    height: auto;
+    min-height: 300px;
+    max-height: 65vh; /* Mismo límite que las fotos */
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 20px;
     box-sizing: border-box;
-    background: rgba(15, 15, 15, 0.8);
+    background: rgba(15, 15, 15, 0.9);
     overflow-y: auto;
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
 }
 
 .letter-content {
@@ -169,12 +189,13 @@ body {
     white-space: pre-wrap;
     text-align: left;
     max-height: 100%;
+    margin: auto 0;
 }
 
 #letterContainer::-webkit-scrollbar { width: 6px; }
 #letterContainer::-webkit-scrollbar-thumb { background-color: #C3D9E3; border-radius: 3px; }
 
-/* Botones de navegación y cierre */
+/* Botones de navegación */
 .nav-btn {
     background: transparent;
     color: #C3D9E3;
@@ -186,34 +207,26 @@ body {
 }
 .nav-btn:hover { color: #ffffff; transform: scale(1.2); }
 
-.close-btn {
-    margin-top: 15px;
-    padding: 12px 25px;
-    background-color: #C3D9E3;
-    color: #111111;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1em;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(195, 217, 227, 0.4);
+/* --- Clase auxiliar para la transición de Javascript --- */
+.transparent-state {
+    opacity: 0 !important;
 }
-.close-btn:hover { background-color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(195, 217, 227, 0.6); }
 
-/* --- Responsive --- */
 @media (max-width: 768px) {
     #anniversaryCard { top: 15px; width: 85%; padding: 15px 20px; min-width: auto; }
-    #anniversaryCard h1 { font-size: 1.3em; }
-    .time-box .num { font-size: 1.4em; }
-    .time-box .label { font-size: 0.65em; }
+    #anniversaryCard h1 { font-size: 1.2em; }
+    .time-box .num { font-size: 1.3em; }
+    .time-box .label { font-size: 0.6em; }
     
     #toggleCounterBtn { top: auto; bottom: 20px; right: 20px; }
     #musicBtn { top: auto; bottom: 70px; right: 20px; } 
 
-    #galleryModal { width: 90%; padding: 20px; }
-    .carousel-container { height: 320px; }
-    .image-wrapper { width: 95%; }
+    #galleryModal { width: 95%; padding: 15px; }
+    
+    /* ESTAS TRES LÍNEAS SON LAS QUE CAMBIAN PARA EL CELULAR: */
+    .carousel-container { min-height: 250px; }
+    .image-wrapper { max-width: 95%; }
+    #carouselImage, #letterContainer { max-height: 55vh; }
+    
     .nav-btn { font-size: 1.5em; padding: 5px; }
-    .close-btn { width: 100%; }
 }
