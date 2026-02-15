@@ -9,13 +9,114 @@ const STROKE_COLOR = '#222222';
 // Pon aquí los nombres o rutas de tus fotos. 
 // Ejemplo: Si tienes tus fotos en la misma carpeta, pon 'foto1.jpg', 'foto2.png', etc.
 const fotos = [
-    // '', // Descomenta y pon tus imágenes entre las comillas
-    // '', 
-    // ''
+    'foto1.webp',
+    'foto2.webp',
+    'foto3.webp',
+    'foto4.webp',
+    'foto5.webp',
+    'foto6.webp',
+    'foto7.webp',
+    'foto8.webp',
+    'foto9.webp',
+    'foto10.webp',
+    'foto11.webp',
+    'foto12.webp',
+    'foto13.webp',
+    'foto14.webp',
+    'foto15.webp',
+    'foto16.webp',
+    'foto17.webp',
+    'foto18.webp',
+    'foto19.webp',
+    'foto20.webp',
+    'foto21.webp',
+    'foto22.webp',
+    'foto23.webp',
+    'foto24.webp',
+    'foto25.webp',
+    'foto26.webp',
+    'foto27.webp',
+    'foto28.webp',
+    'foto29.webp',
+    'foto30.webp',
+    'foto31.webp',
+    'foto32.webp',
+    'foto33.webp',
+    'foto34.webp',
+    'foto35.webp',
+    'foto36.webp',
+    'foto37.webp',
+    'foto38.webp',
+    'foto39.webp',
+    'foto40.webp',
+    'foto41.webp',
+    'foto42.webp',
+    'foto43.webp',
+    'foto44.webp',
+    'foto45.webp',
+    'foto46.webp',
+    'foto47.webp',
+    'foto48.webp',
+    'foto49.webp',
+    'foto50.webp',
+    'foto51.webp',
+    'foto52.webp',
+    'foto53.webp',
+    'foto54.webp',
+    'foto55.webp',
+    'foto56.webp',
+    'foto57.webp',
+    'foto58.webp',
+    'foto59.webp',
+    'foto60.webp',
+    'foto61.webp',
+    'foto62.webp',
+    'foto63.webp',
+    'foto64.webp',
+    'foto65.webp',
+    'foto66.webp',
+    'foto67.webp',
+    'foto68.webp',
+    'foto69.webp',
+    'foto70.webp',
+    'foto71.webp',
+    'foto72.webp',
+    'foto73.webp',
+    'foto74.webp',
+    'foto75.webp',
+    'foto76.webp',
+    'foto77.webp',
+    'foto78.webp',
+    'foto79.webp',
+    'foto80.webp',
+    'foto81.webp',
+    'foto82.webp',
+    'foto83.webp',
+    'foto84.webp',
+    'foto85.webp',
+    'foto86.webp',
+    'foto87.webp',
+    'foto88.webp'
 ];
 
 let currentIndex = 0;
 
+// NUEVO: Variable para controlar el temporizador automático
+let autoSlideInterval;
+
+// NUEVO: Función para iniciar el pase automático
+function startAutoSlide() {
+    // Detenemos cualquier intervalo previo para evitar duplicados
+    stopAutoSlide(); 
+    // Cambia de imagen cada 3.5 segundos (3500 milisegundos)
+    // Puedes ajustar este número si lo quieres más rápido o lento
+    autoSlideInterval = setInterval(nextImage, 3500);
+}
+
+// NUEVO: Función para detener el pase automático
+function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
 function updateCarousel() {
     const imgElement = document.getElementById('carouselImage');
     const placeholder = document.getElementById('placeholderText');
@@ -32,15 +133,20 @@ function updateCarousel() {
 
 function nextImage() {
     if (fotos.length > 0) {
+        // Reiniciamos el automático para dar tiempo a ver la foto
+        stopAutoSlide(); 
         currentIndex = (currentIndex + 1) % fotos.length;
         updateCarousel();
+        startAutoSlide();
     }
 }
 
 function prevImage() {
     if (fotos.length > 0) {
+        stopAutoSlide();
         currentIndex = (currentIndex - 1 + fotos.length) % fotos.length;
         updateCarousel();
+        startAutoSlide();
     }
 }
 // ============================================
@@ -64,7 +170,7 @@ fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/data
             .polygonStrokeColor(() => STROKE_COLOR) 
             .onPolygonClick((d, event, { lat, lng, altitude }) => {
                 if (d.properties.NAME === 'Bolivia') {
-                    world.controls().autoRotate = false;
+                    //world.controls().autoRotate = false;
                     
                     const zoomAltitude = window.innerWidth < 768 ? 2.2 : 1.8;
                     world.pointOfView({ lat: BOLIVIA_LAT, lng: BOLIVIA_LNG, altitude: zoomAltitude }, 1200);
@@ -73,6 +179,7 @@ fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/data
                     setTimeout(() => {
                         document.getElementById('galleryModal').classList.add('show');
                         updateCarousel(); 
+                        startAutoSlide();
                     }, 800); // Reduje un poco el tiempo para que se sienta más responsivo
                 }
             })
@@ -99,6 +206,7 @@ window.addEventListener('resize', () => {
 function closeGallery() {
     // CAMBIO AQUÍ: Usamos classList.remove
     document.getElementById('galleryModal').classList.remove('show');
+    stopAutoSlide();
     
     if (world) {
         world.controls().autoRotate = true; 
