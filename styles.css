@@ -10,97 +10,249 @@ body {
     width: 100vw;
     height: 100vh;
 }
+/* --- Estilos del Header / Contador --- */
+#anniversaryCard {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 15, 15, 0.6);
+    backdrop-filter: blur(8px); /* Efecto cristal esmerilado */
+    -webkit-backdrop-filter: blur(8px);
+    padding: 20px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(195, 217, 227, 0.2); /* Borde sutil con tu color */
+    color: #C3D9E3;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-width: 320px;
+}
 
-/* Estilos para la galería modal */
+#anniversaryCard h1 {
+    margin: 0 0 15px 0;
+    font-size: 1.6em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+#counter {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-box .num {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(195, 217, 227, 0.4);
+}
+
+.time-box .label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+/* Ajuste responsive para el header en el celular */
+@media (max-width: 768px) {
+    #anniversaryCard {
+        top: 15px;
+        width: 85%;
+        padding: 15px 20px;
+        min-width: auto;
+    }
+    #anniversaryCard h1 { font-size: 1.3em; }
+    #counter { gap: 10px; }
+    .time-box .num { font-size: 1.4em; }
+    .time-box .label { font-size: 0.65em; }
+}
+
 #galleryModal {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -40%) scale(0.95); /* Empieza un poco más arriba y pequeño */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Curva de animación súper suave */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
     max-width: 600px;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
-    background: rgba(20, 20, 20, 0.95);
+    background: rgba(15, 15, 15, 0.95); /* Fondo muy oscuro, casi negro */
     color: white;
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 0 30px rgba(255, 75, 75, 0.5);
+    /* Sombra exterior con tu color unificado y transparencia */
+    box-shadow: 0 0 30px rgba(195, 217, 227, 0.3); 
     text-align: center;
     z-index: 1000;
-    border: 1px solid rgba(255, 75, 75, 0.3);
+    border: 1px solid rgba(195, 217, 227, 0.2);
 }
 
-/* Personalizar la barra de scroll del modal */
-#galleryModal::-webkit-scrollbar {
-    width: 8px;
-}
+/* Scrollbar unificada */
+#galleryModal::-webkit-scrollbar { width: 8px; }
 #galleryModal::-webkit-scrollbar-thumb {
-    background-color: #ff4b4b;
+    background-color: #C3D9E3;
     border-radius: 4px;
 }
 
 #galleryModal h2 {
     margin-top: 0;
-    color: #ff4b4b;
+    color: #C3D9E3; /* Título unificado */
     font-size: 1.8em;
 }
 
 #galleryModal p {
-    color: #ddd;
+    color: #cccccc;
     margin-bottom: 25px;
 }
 
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-/* Estilos para las fotos reales */
-.photo-grid img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease;
-}
-
-.photo-grid img:hover {
-    transform: scale(1.05);
-}
-
-.photo-placeholder {
-    background-color: #333;
-    height: 150px;
-    border-radius: 10px;
+/* Estilos del Carrusel */
+.carousel-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9em;
-    color: #aaa;
-    border: 2px dashed #555;
+    position: relative;
+    width: 100%;
+    height: 300px; /* Altura del carrusel */
+    margin-bottom: 20px;
 }
 
+.image-wrapper {
+    width: 80%;
+    height: 100%;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #222;
+    border: 2px solid rgba(195, 217, 227, 0.4); /* Borde sutil */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#carouselImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Adapta la foto sin deformarla */
+    display: none; /* Oculto hasta que pongas fotos */
+}
+
+.placeholder-text {
+    color: #C3D9E3;
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+/* Botones de navegación del carrusel */
+.nav-btn {
+    background: transparent;
+    color: #C3D9E3;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    padding: 10px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.nav-btn:hover {
+    color: #ffffff;
+    transform: scale(1.2);
+}
+
+/* Botón principal unificado */
 .close-btn {
-    margin-top: 30px;
+    margin-top: 15px;
     padding: 12px 25px;
-    background-color: #ff4b4b;
-    color: white;
+    background-color: #C3D9E3;
+    color: #111111; /* Texto oscuro para contrastar con el botón claro */
     border: none;
     border-radius: 25px;
     cursor: pointer;
     font-weight: bold;
     font-size: 1em;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
+    box-shadow: 0 4px 15px rgba(195, 217, 227, 0.4);
 }
 
 .close-btn:hover {
-    background-color: #ff2a2a;
+    background-color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 75, 75, 0.6);
+    box-shadow: 0 6px 20px rgba(195, 217, 227, 0.6);
+}
+
+/* Ajustes Responsive para celular */
+@media (max-width: 768px) {
+    #galleryModal {
+        width: 90%;
+        padding: 20px;
+    }
+    #galleryModal h2 { font-size: 1.4em; }
+    .carousel-container { height: 220px; }
+    .image-wrapper { width: 85%; }
+    .nav-btn { font-size: 1.5em; padding: 5px; }
+    .close-btn { width: 100%; }
+}
+
+/* --- Clases para las animaciones --- */
+
+/* Clase que se activa mediante JavaScript para mostrar la galería */
+#galleryModal.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1); /* Vuelve a su tamaño y posición original */
+}
+
+/* Animación del contador de meses */
+#anniversaryCard {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#anniversaryCard.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px); /* Se desvanece hacia arriba */
+    pointer-events: none; /* Evita clics accidentales cuando está invisible */
+}
+
+/* Estilo del botón toggle */
+#toggleCounterBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid rgba(195, 217, 227, 0.3);
+    color: #C3D9E3;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 101;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+#toggleCounterBtn:hover {
+    background: rgba(195, 217, 227, 0.2);
+    box-shadow: 0 0 10px rgba(195, 217, 227, 0.2);
+}
+
+@media (max-width: 768px) {
+    #toggleCounterBtn {
+        top: auto;
+        bottom: 20px; /* En celular lo pasamos abajo para no amontonar arriba */
+        right: 20px;
+    }
 }

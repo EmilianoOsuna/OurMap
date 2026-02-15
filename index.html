@@ -2,26 +2,55 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nuestro Mundo Juntos</title>
     
     <link rel="stylesheet" href="styles.css">
-    
     <script src="https://unpkg.com/globe.gl"></script>
 </head>
 <body>
 
+    <div id="anniversaryCard">
+        <h1>Felices 16 meses, Hanna</h1>
+        <div id="counter">
+            <div class="time-box">
+                <span class="num" id="meses">0</span>
+                <span class="label">Meses</span>
+            </div>
+            <div class="time-box">
+                <span class="num" id="dias">0</span>
+                <span class="label">Días</span>
+            </div>
+            <div class="time-box">
+                <span class="num" id="horas">00</span>
+                <span class="label">Hrs</span>
+            </div>
+            <div class="time-box">
+                <span class="num" id="mins">00</span>
+                <span class="label">Min</span>
+            </div>
+            <div class="time-box">
+                <span class="num" id="segs">00</span>
+                <span class="label">Seg</span>
+            </div>
+        </div>
+    </div>
+    <button id="toggleCounterBtn" onclick="toggleCounter()">Ocultar Contador</button>
     <div id="globeViz"></div>
 
     <div id="galleryModal">
         <h2>Nuestros 32 días en Bolivia</h2>
         <p>El inicio de nuestra aventura y donde prometimos un futuro juntos.</p>
         
-        <div class="photo-grid">
-            <div class="photo-placeholder">Foto del Salar</div>
-            <div class="photo-placeholder">Foto en La Paz</div>
-            <div class="photo-placeholder">Foto del Anillo</div>
-            <div class="photo-placeholder">Otra foto juntos</div>
+        <div class="carousel-container">
+            <button class="nav-btn left" onclick="prevImage()">&#10094;</button>
+            
+            <div class="image-wrapper">
+                <img id="carouselImage" src="" alt="Nuestro recuerdo">
+                <div id="placeholderText" class="placeholder-text">Añade tus fotos en script.js</div>
+            </div>
+
+            <button class="nav-btn right" onclick="nextImage()">&#10095;</button>
         </div>
 
         <button class="close-btn" onclick="closeGallery()">Cerrar Galería</button>
