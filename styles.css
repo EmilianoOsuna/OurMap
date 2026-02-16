@@ -37,6 +37,11 @@ body {
     font-weight: 600;
     letter-spacing: 1px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    /* NUEVO: Flexbox para alinear el texto y el corazón */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre el texto y el corazón */
 }
 
 #anniversaryCard.hidden {
@@ -212,20 +217,48 @@ body {
     opacity: 0 !important;
 }
 
+/* Estilo del icono de corazón */
+.heart-icon {
+    width: 1.2em;  /* Tamaño relativo al texto */
+    height: 1.2em;
+    color: #C3D9E3; /* Usa tu color de tema */
+    /* Añadimos la animación de latido */
+    animation: heartbeat 1.5s infinite ease-in-out;
+    /* Un filtro sutil para que brille un poco */
+    filter: drop-shadow(0 0 5px rgba(195, 217, 227, 0.5));
+}
+
+/* Definición de la animación del latido */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); } /* Crece un 15% a la mitad del ciclo */
+}
+
+
+
 @media (max-width: 768px) {
-    #anniversaryCard { top: 15px; width: 85%; padding: 15px 20px; min-width: auto; }
-    #anniversaryCard h1 { font-size: 1.2em; }
+    #anniversaryCard { 
+        top: 25px; /* Más aire en el borde superior del celular */
+        width: calc(100% - 40px); /* NUEVO: 100% menos 20px de cada lado */
+        padding: 15px; 
+    }
+    
+    #anniversaryCard h1 { font-size: 1.2em; gap: 8px; } /* Reducimos un poco el espacio */
     .time-box .num { font-size: 1.3em; }
     .time-box .label { font-size: 0.6em; }
     
-    #toggleCounterBtn { top: auto; bottom: 20px; right: 20px; }
-    #musicBtn { top: auto; bottom: 70px; right: 20px; } 
+    #toggleCounterBtn { top: auto; bottom: 25px; right: 20px; }
+    #musicBtn { top: auto; bottom: 75px; right: 20px; } 
 
-    #galleryModal { width: 95%; padding: 15px; }
+    #galleryModal { 
+        width: calc(100% - 40px); /* NUEVO: Margen perfecto de 20px a los lados */
+        max-height: 75vh; /* NUEVO: Evita que choque con el techo/suelo de la pantalla */
+        padding: 20px 15px; 
+    }
     
-    /* ESTAS TRES LÍNEAS SON LAS QUE CAMBIAN PARA EL CELULAR: */
     .carousel-container { min-height: 250px; }
-    .image-wrapper { max-width: 95%; }
+    /* Como el modal ya tiene margen, la imagen puede usar el 100% del espacio interno */
+    .image-wrapper { max-width: 100%; } 
     #carouselImage, #letterContainer { max-height: 55vh; }
     
     .nav-btn { font-size: 1.5em; padding: 5px; }
