@@ -33,10 +33,10 @@ function stopAutoSlide() {
 }
 
 // --- FUNCIÓN PRINCIPAL CON TRANSICIÓN ---
+// --- FUNCIÓN PRINCIPAL CON TRANSICIÓN Y PRECARGA ---
 function updateCarousel() {
-    // Si ya hay una transición en curso, no hacemos nada
     if (isTransitioning) return;
-
+    
     const imgElement = document.getElementById('carouselImage');
     const letterContainer = document.getElementById('letterContainer');
     const placeholder = document.getElementById('placeholderText');
@@ -46,44 +46,61 @@ function updateCarousel() {
     imgElement.classList.add('transparent-state');
     if(letterContainer) letterContainer.classList.add('transparent-state');
 
-    // 2. Esperamos 400ms (lo que dura la transición CSS) antes de cambiar el contenido
+    // 2. Esperamos 400ms a que termine de hacerse invisible
     setTimeout(() => {
         const currentItem = fotos[currentIndex];
 
-        // Reseteamos displays (mientras están invisibles)
+        // Ocultamos los contenedores temporalmente
         imgElement.style.display = 'none';
         if(letterContainer) letterContainer.style.display = 'none';
         placeholder.style.display = 'none';
         
         if (fotos.length === 0) {
             placeholder.style.display = 'block';
-            isTransitioning = false; // Desbloquear si no hay fotos
+            isTransitioning = false; 
             return;
         }
 
-        // Cambiamos el contenido real (src o texto)
         if (currentItem === 'CARTA_INICIAL' && letterContainer) {
+            // LÓGICA PARA LA CARTA (No necesita descargar nada de internet)
             letterContainer.style.display = 'flex';
             letterContainer.querySelector('.letter-content').textContent = miCarta;
+            
+            // Pausa técnica minúscula para que el navegador registre el bloque antes de animar
+            setTimeout(() => {
+                letterContainer.classList.remove('transparent-state');
+                setTimeout(() => isTransitioning = false, 400); // Desbloqueamos al terminar de aparecer
+            }, 50);
+
         } else {
-            imgElement.src = currentItem;
+            // LÓGICA PARA LAS FOTOS (Depende de la velocidad de internet)
             imgElement.style.display = 'block';
+
+            // Truco maestro: Le decimos qué hacer CUANDO la foto termine de cargar
+            imgElement.onload = () => {
+                // Solo hasta que la foto esté 100% descargada, le quitamos lo invisible
+                imgElement.classList.remove('transparent-state');
+                
+                // Esperamos los 400ms de la animación para desbloquear las flechas
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 400);
+                
+                // Limpiamos el evento para que no se duplique después
+                imgElement.onload = null;
+            };
+
+            // Por si alguna foto falla o no se encuentra, desbloqueamos para no trabar la galería
+            imgElement.onerror = () => {
+                isTransitioning = false;
+                imgElement.onload = null;
+            };
+
+            // Al asignarle el src AQUÍ, disparamos la descarga y el proceso de arriba
+            imgElement.src = currentItem;
         }
 
-        // 3. Iniciamos el desvanecimiento de entrada (Fade In)
-        // Usamos un pequeño timeout anidado para asegurar que el navegador procesó el cambio de display
-        setTimeout(() => {
-            imgElement.classList.remove('transparent-state');
-            if(letterContainer) letterContainer.classList.remove('transparent-state');
-            
-            // 4. Esperamos otros 400ms a que termine de aparecer para desbloquear
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 400);
-            
-        }, 50); // Pequeña pausa técnica
-
-    }, 400); // Tiempo de espera igual a la transición CSS
+    }, 400); 
 }
 
 function nextImage() {
@@ -201,9 +218,15 @@ function closeGallery() {
     }
 }
 
+// === CERRAR MODAL AL HACER CLIC AFUERA (VERSIÓN CORREGIDA) ===
 document.addEventListener('pointerdown', (event) => {
     const modal = document.getElementById('galleryModal');
-    if (modal.classList.contains('show') && !modal.contains(event.target)) {
+    
+    // Verificamos que la galería esté abierta, que el clic sea afuera, 
+    // Y QUE NO estemos viendo una foto en pantalla completa
+    if (modal.classList.contains('show') && 
+        !modal.contains(event.target) && 
+        !fullscreenModal.classList.contains('show-fullscreen')) {
         closeGallery();
     }
 });
@@ -215,22 +238,20 @@ function toggleCounter() {
     btn.innerText = card.classList.contains('hidden') ? 'Mostrar Contador' : 'Ocultar Contador';
 }
 
-let isPlaying = false;
-function toggleMusic() {
-    const audio = document.getElementById('bgMusic');
+// === TOGGLE DE SPOTIFY ===
+function toggleSpotify() {
+    const widget = document.getElementById('spotifyWidget');
     const btn = document.getElementById('musicBtn');
-    if (isPlaying) {
-        audio.pause();
-        btn.innerHTML = '🎵 Reproducir';
+    
+    // Agrega o quita la clase hidden
+    widget.classList.toggle('hidden');
+    
+    // Cambia el texto del botón según el estado
+    if (widget.classList.contains('hidden')) {
+        btn.innerHTML = '🎵 Mostrar Música';
     } else {
-        audio.volume = 0.5;
-        audio.play().then(() => {
-            btn.innerHTML = '⏸ Pausar';
-        }).catch(error => {
-           console.log("El navegador requiere interacción previa.");
-        });
+        btn.innerHTML = '🎵 Ocultar Música';
     }
-    isPlaying = !isPlaying;
 }
 
 // === CONTADOR EN VIVO ===
@@ -266,5 +287,24 @@ function startCounter() {
         document.getElementById('segs').innerText = segs.toString().padStart(2, '0');
     }, 1000);
 }
+
+// === LÓGICA DE PANTALLA COMPLETA (LIGHTBOX) ===
+const fullscreenModal = document.getElementById('fullscreenModal');
+const fullscreenImage = document.getElementById('fullscreenImage');
+const carouselImage = document.getElementById('carouselImage');
+
+// Abrir imagen en grande
+carouselImage.addEventListener('click', () => {
+    stopAutoSlide(); // Pausamos el carrusel para que no le cambie la foto mientras la ve
+    fullscreenImage.src = carouselImage.src;
+    fullscreenModal.classList.add('show-fullscreen');
+});
+
+// Cerrar imagen en grande (dando clic en cualquier parte)
+fullscreenModal.addEventListener('click', () => {
+    fullscreenModal.classList.remove('show-fullscreen');
+    startAutoSlide(); // Reanudamos el show
+});
+
 
 startCounter();

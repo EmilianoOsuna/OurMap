@@ -250,4 +250,78 @@ body {
     .image-wrapper { max-width: 100%; }
     #carouselImage, #letterContainer { max-height: 55vh; }
     .nav-btn { font-size: 1.5em; padding: 5px; }
+
+    #toggleCounterBtn { top: auto; bottom: 25px; right: 20px; }
+    #musicBtn { top: auto; bottom: 75px; right: 20px; } 
+
+    /* Acomodo de Spotify para celular */
+    #spotifyWidget {
+        top: auto;
+        bottom: 125px; /* Flota por encima de los botones inferiores */
+        right: 20px;
+        width: calc(100% - 40px); /* Se adapta a la pantalla */
+        max-width: 320px;
+    }
+}
+
+
+/* --- Modal Pantalla Completa (Lightbox) --- */
+#fullscreenModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95); /* Fondo casi negro puro */
+    z-index: 9999; /* Por encima de TODO */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    cursor: zoom-out; /* Cursor de alejar */
+}
+
+#fullscreenModal.show-fullscreen {
+    opacity: 1;
+    visibility: visible;
+}
+
+#fullscreenImage {
+    max-width: 95%;
+    max-height: 95vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+#fullscreenModal.show-fullscreen #fullscreenImage {
+    transform: scale(1); /* Pequeño efecto de zoom al abrir */
+}
+
+/* Indicador visual en la foto normal del carrusel */
+#carouselImage {
+    cursor: zoom-in;
+}
+
+/* --- Widget de Spotify --- */
+#spotifyWidget {
+    position: absolute;
+    top: 70px; /* Queda justo debajo de los botones superiores */
+    right: 20px; /* Alineado a la derecha */
+    width: 300px;
+    z-index: 101;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    border-radius: 12px;
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+#spotifyWidget.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(20px); /* Se esconde suavemente hacia la derecha */
+    pointer-events: none;
 }
