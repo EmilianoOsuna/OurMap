@@ -14,7 +14,7 @@ body {
 /* --- Header y Contador --- */
 #anniversaryCard {
     position: absolute;
-    top: 30px;
+    top: 40px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(15, 15, 15, 0.6);
@@ -28,7 +28,15 @@ body {
     z-index: 100;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     min-width: 320px;
+    box-sizing: border-box;
+    max-width: 90vw;
     transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#anniversaryCard.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+    pointer-events: none;
 }
 
 #anniversaryCard h1 {
@@ -37,17 +45,23 @@ body {
     font-weight: 600;
     letter-spacing: 1px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    /* NUEVO: Flexbox para alinear el texto y el corazón */
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px; /* Espacio entre el texto y el corazón */
+    gap: 10px;
 }
 
-#anniversaryCard.hidden {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-    pointer-events: none;
+.heart-icon {
+    width: 1.2em;
+    height: 1.2em;
+    color: #C3D9E3;
+    animation: heartbeat 1.5s infinite ease-in-out;
+    filter: drop-shadow(0 0 5px rgba(195, 217, 227, 0.5));
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
 }
 
 #counter {
@@ -89,15 +103,16 @@ body {
     transform: translateY(-2px);
 }
 
-/* --- Galería Modal --- */
+/* --- Galería Modal (Versión PC - Izquierda) --- */
 #galleryModal {
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -40%) scale(0.95);
-    width: 90%;
-    max-width: 800px;
-    max-height: 85vh;
+    left: 40px; 
+    transform: translateY(-40%) scale(0.95); 
+    width: 400px;
+    max-width: 45vw; 
+    max-height: 80vh;
+    box-sizing: border-box;
     overflow-y: auto;
     background: rgba(15, 15, 15, 0.95);
     color: white;
@@ -110,7 +125,6 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Ocultar barra de scroll en Firefox y Edge */
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
@@ -118,16 +132,13 @@ body {
 #galleryModal.show {
     opacity: 1;
     visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1); 
 }
 
-/* Ocultar barra de scroll en Chrome/Safari */
 #galleryModal::-webkit-scrollbar { display: none; }
-
 #galleryModal h2 { margin-top: 0; color: #C3D9E3; font-size: 1.8em; }
 #galleryModal p { color: #cccccc; margin-bottom: 25px; }
 
-/* --- Carrusel y Carta --- */
 /* --- Carrusel y Carta --- */
 .carousel-container {
     display: flex;
@@ -135,14 +146,12 @@ body {
     justify-content: center;
     position: relative;
     width: 100%;
-    /* Quitamos la altura fija para que se adapte al contenido */
     min-height: 300px; 
 }
 
 .image-wrapper {
-    /* Usamos max-width en lugar de width fijo para que pueda encogerse en fotos verticales */
     max-width: 85%; 
-    height: auto; /* Quitamos el height: 100% */
+    height: auto;
     position: relative;
     border-radius: 10px;
     overflow: hidden;
@@ -151,18 +160,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Añadimos una transición para que cuando el cuadro cambie de tamaño, lo haga suavemente */
     transition: width 0.3s ease, height 0.3s ease; 
 }
 
 #carouselImage { 
-    /* La imagen dicta su propio tamaño sin salirse de los límites */
     width: auto; 
     height: auto; 
     max-width: 100%; 
-    max-height: 65vh; /* Evita que las fotos muy altas se salgan de la pantalla */
+    max-height: 65vh;
     display: none; 
-    /* Mantenemos la transición de opacidad */
     transition: opacity 0.4s ease-in-out;
     opacity: 1;
 }
@@ -171,12 +177,12 @@ body {
 
 #letterContainer {
     width: 100%;
-    min-width: 280px; /* Para que la carta no se comprima demasiado */
+    min-width: 280px; 
     height: auto;
     min-height: 300px;
-    max-height: 65vh; /* Mismo límite que las fotos */
+    max-height: 65vh; 
     display: flex;
-    align-items: flex-start;
+    align-items: flex-start; 
     justify-content: center;
     padding: 20px;
     box-sizing: border-box;
@@ -194,13 +200,12 @@ body {
     white-space: pre-wrap;
     text-align: left;
     max-height: 100%;
-    margin: auto 0;
+    margin: auto 0; 
 }
 
 #letterContainer::-webkit-scrollbar { width: 6px; }
 #letterContainer::-webkit-scrollbar-thumb { background-color: #C3D9E3; border-radius: 3px; }
 
-/* Botones de navegación */
 .nav-btn {
     background: transparent;
     color: #C3D9E3;
@@ -212,38 +217,16 @@ body {
 }
 .nav-btn:hover { color: #ffffff; transform: scale(1.2); }
 
-/* --- Clase auxiliar para la transición de Javascript --- */
-.transparent-state {
-    opacity: 0 !important;
-}
+.transparent-state { opacity: 0 !important; }
 
-/* Estilo del icono de corazón */
-.heart-icon {
-    width: 1.2em;  /* Tamaño relativo al texto */
-    height: 1.2em;
-    color: #C3D9E3; /* Usa tu color de tema */
-    /* Añadimos la animación de latido */
-    animation: heartbeat 1.5s infinite ease-in-out;
-    /* Un filtro sutil para que brille un poco */
-    filter: drop-shadow(0 0 5px rgba(195, 217, 227, 0.5));
-}
-
-/* Definición de la animación del latido */
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); } /* Crece un 15% a la mitad del ciclo */
-}
-
-
-
+/* --- Responsive Celulares --- */
 @media (max-width: 768px) {
     #anniversaryCard { 
-        top: 25px; /* Más aire en el borde superior del celular */
-        width: calc(100% - 40px); /* NUEVO: 100% menos 20px de cada lado */
+        top: 25px;
+        width: calc(100% - 40px);
         padding: 15px; 
     }
-    
-    #anniversaryCard h1 { font-size: 1.2em; gap: 8px; } /* Reducimos un poco el espacio */
+    #anniversaryCard h1 { font-size: 1.2em; gap: 8px; }
     .time-box .num { font-size: 1.3em; }
     .time-box .label { font-size: 0.6em; }
     
@@ -251,15 +234,20 @@ body {
     #musicBtn { top: auto; bottom: 75px; right: 20px; } 
 
     #galleryModal { 
-        width: calc(100% - 40px); /* NUEVO: Margen perfecto de 20px a los lados */
-        max-height: 75vh; /* NUEVO: Evita que choque con el techo/suelo de la pantalla */
+        left: 50%;
+        transform: translate(-50%, -40%) scale(0.95);
+        width: calc(100% - 40px); 
+        max-width: none;
+        max-height: 75vh; 
         padding: 20px 15px; 
     }
     
-    .carousel-container { min-height: 250px; }
-    /* Como el modal ya tiene margen, la imagen puede usar el 100% del espacio interno */
-    .image-wrapper { max-width: 100%; } 
-    #carouselImage, #letterContainer { max-height: 55vh; }
+    #galleryModal.show {
+        transform: translate(-50%, -50%) scale(1);
+    }
     
+    .carousel-container { min-height: 250px; }
+    .image-wrapper { max-width: 100%; }
+    #carouselImage, #letterContainer { max-height: 55vh; }
     .nav-btn { font-size: 1.5em; padding: 5px; }
 }
